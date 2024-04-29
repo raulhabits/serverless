@@ -16,6 +16,7 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+.syndicate
 .syndicate-config-dev
 .idea
 target/
