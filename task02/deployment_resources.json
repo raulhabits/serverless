@@ -34,7 +34,7 @@
         "GET": {
           "authorization_type": "NONE",
           "integration_type": "lambda",
-          "lambda_name": "hello_world",
+          "lambda_name": "hello_world-test",
           "api_key_required": false,
           "method_request_parameters": {},
           "integration_request_body_template": {},
