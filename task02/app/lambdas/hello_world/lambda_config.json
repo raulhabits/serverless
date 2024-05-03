@@ -1,5 +1,4 @@
 {
-  "version": "1.0",
   "name": "hello_world",
   "func_name": "lambdas/hello_world/index.handler",
   "resource_type": "lambda",
