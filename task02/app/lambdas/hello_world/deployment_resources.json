@@ -1,0 +1,11 @@
+{
+  "hello_world-role": {
+    "predefined_policies": [],
+    "principal_service": "lambda",
+    "custom_policies": [
+      "lambda-basic-execution",
+      "function-url-execution"
+    ],
+    "resource_type": "iam_role"
+  }
+}
