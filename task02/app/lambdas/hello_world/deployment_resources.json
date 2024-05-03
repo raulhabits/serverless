@@ -1,0 +1,30 @@
+{
+  "function-url-execution": {
+    "resource_type": "iam_policy",
+    "policy_content": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "lambda:InvokeFunctionUrl",
+          "Resource": "arn:aws:lambda:${region}:${account_id}:function:${resources_prefix}hello_world${resources_suffix}",
+          "Condition": {
+            "StringEquals": {
+              "lambda:FunctionUrlAuthType": "NONE"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "hello_world-role": {
+    "predefined_policies": [
+    ],
+    "principal_service": "lambda",
+    "custom_policies": [
+      "lambda-basic-execution",
+      "function-url-execution"
+    ],
+    "resource_type": "iam_role"
+  }
+}
