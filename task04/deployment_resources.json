@@ -16,7 +16,8 @@
             "ssm:GetParameter",
             "kms:Decrypt",
             "sqs:*",
-            "sns:*"
+            "sns:*",
+            "lambda:*"
           ],
           "Effect": "Allow",
           "Resource": "*"
