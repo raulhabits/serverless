@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "name": "sqs_handler",
+  "func_name": "lambdas/sqs_handler/index.handler",
+  "resource_type": "lambda",
+  "iam_role_name": "sqs_handler-role",
+  "runtime": "nodejs20.x",
+  "memory": 128,
+  "timeout": 100,
+  "lambda_path": "lambdas/sqs_handler",
+  "dependencies": [
+    {
+      "resource_name": "async_queue",
+      "resource_type": "sqs_queue"
+    }
+  ],
+  "event_sources": [
+    {
+      "resource_name": "async_queue",
+      "target_queue": "async_queue",
+      "resource_type": "sqs_trigger",
+      "batch_size" : 1,
+      "batch_window": 1
+    }
+  ],
+  "env_variables": {},
+  "publish_version": true,
+  "alias": "${lambdas_alias_name}",
+  "url_config": {},
+  "ephemeral_storage": 512
+}
