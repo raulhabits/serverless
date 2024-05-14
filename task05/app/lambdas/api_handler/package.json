@@ -1,0 +1,13 @@
+{
+  "name": "api_handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1011.0",
+    "uuid": "^9.0.1"
+  }
+}

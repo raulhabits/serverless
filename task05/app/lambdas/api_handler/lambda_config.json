@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "name": "api_handler",
+  "func_name": "lambdas/api_handler/index.handler",
+  "resource_type": "lambda",
+  "iam_role_name": "api_handler-role",
+  "runtime": "nodejs20.x",
+  "memory": 128,
+  "timeout": 100,
+  "lambda_path": "lambdas/api_handler",
+  "dependencies": [
+    {
+      "resource_name": "Events",
+      "resource_type": "dynamodb_table"
+    }
+  ],
+  "event_sources": [],
+  "env_variables": {
+      "table_name": "${target_table}"
+  },
+  "publish_version": false,
+  "url_config": {},
+  "ephemeral_storage": 512
+}
