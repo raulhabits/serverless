@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
 
-    console.log(event);
+    console.log(event['Records'][0]['body']);
     
     // TODO implement
     const response = {
