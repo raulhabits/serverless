@@ -10,14 +10,14 @@
   "lambda_path": "lambdas/sns_handler",
   "dependencies": [
     {
-      "resource_name": "arn:aws:sns:${region}:${account_id}:${resources_prefix}lambda_topic${resources_suffix}",
+      "resource_name": "lambda_topic",
       "resource_type": "sns_topic"
     }
   ],
   "event_sources": [
     {
-      "resource_name": "arn:aws:sns:${region}:${account_id}:${resources_prefix}lambda_topic${resources_suffix}",
-      "target_topic": "arn:aws:sns:${region}:${account_id}:${resources_prefix}lambda_topic${resources_suffix}",
+      "resource_name": "lambda_topic",
+      "target_topic": "lambda_topic",
       "resource_type": "sns_topic_trigger",
       "batch_size" : 1,
       "batch_window": 1
