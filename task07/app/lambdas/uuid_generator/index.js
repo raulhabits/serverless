@@ -20,7 +20,7 @@ exports.handler = async (event) => {
 
 	const params = {
 		Bucket: targetBucket,
-		Key: key,
+		Key: key.toString(),
 		Body: JSON.stringify(content, null, 2)
 	};
     
