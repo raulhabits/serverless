@@ -22,6 +22,7 @@ exports.handler = async (event) => {
         };
     } 
     if (eventDetail.eventName === 'MODIFY') {
+        content['updatedAttribute'] = 'value';
         content['oldValue'] = Number(eventDetail.dynamodb.OldImage.value.N); 
         content['newValue'] = Number(eventDetail.dynamodb.NewImage.value.N);
     }
