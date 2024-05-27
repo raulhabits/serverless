@@ -7,10 +7,7 @@ const serverless = require('serverless-http');
 
 
 app.get('/weather', (req, res) => {
-    sdk_layer.exchange()
-    .then(data => {
-        res.send(data);
-    })
+    res.json(sdk_layer.exchange());
 });
 
 /*
