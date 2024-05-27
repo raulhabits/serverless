@@ -9,7 +9,7 @@ async function get() {
     let data = {...response.data};
     let time = data.hourly.time.map(elem => new Date(elem * 1000).toISOString().toString())
     data.hourly = time;
-    return response.data;
+    return data;
 }
 
 module.exports.exchange = get;
