@@ -1,6 +1,6 @@
 {
   "processor-role": {
-    "predefined_policies": [],
+    "predefined_policies": ["AWSXRayDaemonWriteAccess"],
     "principal_service": "lambda",
     "custom_policies": [
       "lambda-basic-execution"
