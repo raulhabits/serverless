@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "name": "processor",
+  "func_name": "lambdas/processor/index.handler",
+  "resource_type": "lambda",
+  "iam_role_name": "processor-role",
+  "runtime": "nodejs20.x",
+  "memory": 128,
+  "timeout": 100,
+  "lambda_path": "lambdas/processor",
+  "tracing_mode": "Active",
+  "dependencies": [
+    {
+      "resource_name": "${target_table}",
+      "resource_type": "dynamodb_table"
+    }
+  ],
+  "event_sources": [],
+  "env_variables": {
+    "target_table": "${target_table}"
+  },
+  "publish_version": false,
+  "url_config": {
+    "auth_type": "NONE"
+  },
+  "ephemeral_storage": 512
+}
