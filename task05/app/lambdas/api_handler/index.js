@@ -13,21 +13,21 @@ event = {
 }
 */
 
-exports.handler = async (event) => {
+exports.handler = async (e) => {
+	let event = {
+			id: uuidv4(),
+			createdAt: date.toISOString(),
+			principalId: event.principalId,
+			body: event.content
+			};
     console.log(event);
     let date = new Date();
 	const params = {
 		TableName: tableName,
-		Item: {
-			id: uuidv4(),
-            createdAt: date.toISOString(),
-			principalId: event.principalId,
-			body: event.content
-		}
+		Item: event
 	};
 	try {
 		const data = await docClient.put(params).promise();
-        console.log(data.Item);
 		return {
             statusCode: 201,
             event
