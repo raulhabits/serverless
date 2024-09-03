@@ -19,8 +19,8 @@ exports.handler = async (e) => {
 	let event = {
 			id: uuidv4(),
 			createdAt: date.toISOString(),
-			principalId: event.principalId,
-			body: event.content
+			principalId: e.principalId,
+			body: e.content
 			};
     console.log(event);
 	const params = {
