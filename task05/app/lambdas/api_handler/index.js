@@ -14,6 +14,8 @@ event = {
 */
 
 exports.handler = async (e) => {
+	
+    let date = new Date();
 	let event = {
 			id: uuidv4(),
 			createdAt: date.toISOString(),
@@ -21,7 +23,6 @@ exports.handler = async (e) => {
 			body: event.content
 			};
     console.log(event);
-    let date = new Date();
 	const params = {
 		TableName: tableName,
 		Item: event
