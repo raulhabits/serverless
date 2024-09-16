@@ -53,10 +53,11 @@ app.post('/signin', async (req, res) => {
         const response = await client.send(new AdminInitiateAuthCommand(params));
         console.log('AdminInitiateAuthCommand', response);
 	    if (response && response.AuthenticationResult && response.AuthenticationResult.AccessToken) {
-            res.status(200).send({
-                accessToken: response.AuthenticationResult.AccessToken
-            });
-        }
+	            res.status(200).send({
+	                accessToken: response.AuthenticationResult.AccessToken
+	            });
+		    return;
+	        }
 	} catch (err) {
 		res.status(400).send(JSON.stringify(err, null, 2));
 	}
