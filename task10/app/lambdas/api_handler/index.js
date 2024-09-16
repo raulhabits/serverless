@@ -59,15 +59,17 @@ app.post('/signup', async (req, res) => {
 
     const client = new CognitoIdentityProviderClient({});
 
+    const body = JSON.parse(req.apiGateway.event.body);
+
     const command = new SignUpCommand({
       ClientId: cupClientId,
-      Username: req.body.email,
-      username: req.body.email,
-      Password: req.body.password,
-      UserAttributes: [{ Name: "firstName", Value: req.body.firstName }, { Name: "lastName", Value: req.body.lastName }, { Name: "email", Value: req.body.email }],
+      Username: body.email,
+      username: body.email,
+      Password: body.password,
+      UserAttributes: [{ Name: "firstName", Value: body.firstName }, { Name: "lastName", Value: body.lastName }, { Name: "email", Value: body.email }],
     });
 
-    console.log(req, command);
+    console.log(body, command);
   
     const response = await client.send(command);
     if (response && response.UserConfirmed) {
