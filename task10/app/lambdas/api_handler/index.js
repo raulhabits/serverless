@@ -87,9 +87,7 @@ app.post('/signup', async (req, res) => {
         
         const response = await client.send(command);
         console.log('SignUpCommand', response);
-	    if (response && response.UserConfirmed) {
-            res.status(200).send("ok");
-        }
+    	res.status(200).send("ok");
 	} catch (err) {
 		res.status(400).send(JSON.stringify(err, null, 2));
 	}
