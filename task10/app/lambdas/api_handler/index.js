@@ -8,7 +8,7 @@ const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
 const { CognitoIdentityProviderClient, AdminInitiateAuthCommand, SignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
 
-
+const cupId = process.env.cup_id;
 const cupClientId = process.env.cup_client_id;
 
 const tablesTableDynamodb = process.env.cup_client_id;
@@ -37,6 +37,7 @@ app.post('/signin', async (req, res) => {
 	
     const params = {
         AuthFlow: 'USER_PASSWORD_AUTH',
+	UserPoolId: cupId,
         ClientId: cupClientId,
         AuthParameters: {
             USERNAME: body.email,
