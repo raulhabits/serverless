@@ -68,7 +68,7 @@ app.post('/signup', async (req, res) => {
       ClientId: cupClientId,
       Username: body.email,
       Password: body.password,
-      UserAttributes: [{ Name: "firstName", Value: body.firstName }, { Name: "lastName", Value: body.lastName }, { Name: "email", Value: body.email }],
+      UserAttributes: [{ Name: "name", Value: body.firstName }, { Name: "email", Value: body.email }],
     });
 
     console.log(body, command);
