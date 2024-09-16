@@ -47,14 +47,21 @@ app.post('/signin', async (req, res) => {
 
     const client = new CognitoIdentityProviderClient({});
 
-    const response = await client.send(new AdminInitiateAuthCommand(params));
-    if (response && response.AuthenticationResult && response.AuthenticationResult.AccessToken) {
-        res.status(200).send({
-            accessToken: response.AuthenticationResult.AccessToken
-        });
-    } else {
-        res.status(400).send();
-    }
+
+    try {
+        
+        const response = await client.send(new AdminInitiateAuthCommand(params));
+        console.log('AdminInitiateAuthCommand', response);
+	    if (response && response.AuthenticationResult && response.AuthenticationResult.AccessToken) {
+            res.status(200).send({
+                accessToken: response.AuthenticationResult.AccessToken
+            });
+        }
+	} catch (err) {
+		res.status(400).send(JSON.stringify(err, null, 2));
+	}
+
+    res.status(400).send();
   
 });
 
@@ -74,14 +81,20 @@ app.post('/signup', async (req, res) => {
     });
 
     console.log(body, command);
-  
-    const response = await client.send(command);
-    if (response && response.UserConfirmed) {
-        res.status(200).send("ok");
-    } else {
-        res.status(400).send();
-    }
 
+
+    try {
+        
+        const response = await client.send(command);
+        console.log('SignUpCommand', response);
+	    if (response && response.UserConfirmed) {
+            res.status(200).send("ok");
+        }
+	} catch (err) {
+		res.status(400).send(JSON.stringify(err, null, 2));
+	}
+    
+    res.status(400).send();
 
 /*
     const signupRequest = {
