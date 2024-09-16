@@ -66,6 +66,7 @@ app.post('/signup', async (req, res) => {
     const body = JSON.parse(req.apiGateway.event.body);
 
     const command = new SignUpCommand({
+      UserPoolId: cupId,
       ClientId: cupClientId,
       Username: body.email,
       Password: body.password,
