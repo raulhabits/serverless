@@ -77,6 +77,7 @@ app.post('/signup', async (req, res) => {
       ClientId: cupClientId,
       Username: body.email,
       Password: body.password,
+      MessageAction: 'SUPPRESS',
       UserAttributes: [{ Name: "name", Value: body.firstName }, { Name: "email", Value: body.email }],
     });
 
