@@ -32,12 +32,15 @@ const scanTable = async (tableName) => {
 
 
 app.post('/signin', async (req, res) => {
+	
+    const body = JSON.parse(req.apiGateway.event.body);
+	
     const params = {
         AuthFlow: AuthFlowType.ADMIN_USER_PASSWORD_AUTH,
         ClientId: cupClientId,
         AuthParameters: {
-            USERNAME: req.body.email,
-            PASSWORD: req.body.password
+            USERNAME: body.email,
+            PASSWORD: body.password
         }
     };
 
@@ -64,7 +67,6 @@ app.post('/signup', async (req, res) => {
     const command = new SignUpCommand({
       ClientId: cupClientId,
       Username: body.email,
-      username: body.email,
       Password: body.password,
       UserAttributes: [{ Name: "firstName", Value: body.firstName }, { Name: "lastName", Value: body.lastName }, { Name: "email", Value: body.email }],
     });
@@ -116,10 +118,12 @@ app.post('/signup', async (req, res) => {
 });
 
 app.post('/tables', async (req, res) => {
+	
+    const body = JSON.parse(req.apiGateway.event.body);
     
 	const targetData = {
 		TableName: tablesTableDynamodb,
-		Item: req.body
+		Item: body
 	};
 
     try {
@@ -136,16 +140,18 @@ app.post('/tables', async (req, res) => {
 });
 
 app.post('/reservations', async (req, res) => {
+	
+    const body = JSON.parse(req.apiGateway.event.body);
 
 	const targetData = {
 		TableName: reservationsTableDynamodb,
-		Item: req.body
+		Item: body
 	};
     try {
 		const data = await docClient.put(targetData).promise();
         console.log(data);
 	    res.status(200).send({
-                id: req.body.id
+                id: body.id
             });
 	} catch (err) {
 		res.status(400).send(JSON.stringify(err, null, 2));
@@ -162,6 +168,7 @@ app.get('/tables', (req, res) => {
 });
 
 app.get('/tables/:tableId', async (req, res) => {
+	console.log('/tables/:tableId -> Params', req.params)
     var params = {
         TableName: tablesTableDynamodb,
         Key: { id: req.params.tableId },
