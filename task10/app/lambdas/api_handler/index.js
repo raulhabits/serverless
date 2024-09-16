@@ -36,7 +36,7 @@ app.post('/signin', async (req, res) => {
     const body = JSON.parse(req.apiGateway.event.body);
 	
     const params = {
-        AuthFlow: 'USER_PASSWORD_AUTH',
+        AuthFlow: 'ADMIN_USER_PASSWORD_AUTH',
 	UserPoolId: cupId,
         ClientId: cupClientId,
         AuthParameters: {
