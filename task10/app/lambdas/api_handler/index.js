@@ -61,9 +61,12 @@ app.post('/signup', async (req, res) => {
     const command = new SignUpCommand({
       ClientId: cupClientId,
       Username: req.body.email,
+      username: req.body.email,
       Password: req.body.password,
       UserAttributes: [{ Name: "firstName", Value: req.body.firstName }, { Name: "lastName", Value: req.body.lastName }, { Name: "email", Value: req.body.email }],
     });
+
+    console.log(command);
   
     const response = await client.send(command);
     if (response && response.UserConfirmed) {
