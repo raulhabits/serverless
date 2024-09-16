@@ -130,7 +130,7 @@ app.post('/tables', async (req, res) => {
 		const data = await docClient.put(targetData).promise();
         console.log(data);
 	    res.status(200).send({
-                id: req.body.id
+                id: body.id
             });
 	} catch (err) {
 		res.status(400).send(JSON.stringify(err, null, 2));
