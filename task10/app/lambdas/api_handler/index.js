@@ -56,6 +56,7 @@ app.post('/signin', async (req, res) => {
 
 app.post('/signup', async (req, res) => {
 
+
     const client = new CognitoIdentityProviderClient({});
 
     const command = new SignUpCommand({
@@ -66,7 +67,7 @@ app.post('/signup', async (req, res) => {
       UserAttributes: [{ Name: "firstName", Value: req.body.firstName }, { Name: "lastName", Value: req.body.lastName }, { Name: "email", Value: req.body.email }],
     });
 
-    console.log(command);
+    console.log(req, command);
   
     const response = await client.send(command);
     if (response && response.UserConfirmed) {
