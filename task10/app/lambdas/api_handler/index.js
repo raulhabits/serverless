@@ -6,7 +6,7 @@ const serverless = require('serverless-http');
 const AWS = require("aws-sdk");
 
 const docClient = new AWS.DynamoDB.DocumentClient();
-const { CognitoIdentityProviderClient, AdminInitiateAuthCommand, SignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
+const { CognitoIdentityProviderClient, AdminInitiateAuthCommand, AdminCreateUserCommand, AdminConfirmSignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
 
 const cupId = process.env.cup_id;
 const cupClientId = process.env.cup_client_id;
@@ -72,7 +72,7 @@ app.post('/signup', async (req, res) => {
 
     const body = JSON.parse(req.apiGateway.event.body);
 
-    const command = new SignUpCommand({
+    const adminCreateUserCommand = new AdminCreateUserCommand({
       UserPoolId: cupId,
       ClientId: cupClientId,
       Username: body.email,
@@ -81,13 +81,20 @@ app.post('/signup', async (req, res) => {
       UserAttributes: [{ Name: "name", Value: body.firstName }, { Name: "email", Value: body.email }],
     });
 
-    console.log(body, command);
+    const adminConfirmSignUpCommand = new AdminConfirmSignUpCommand({ // AdminConfirmSignUpRequest	
+		UserPoolId: cupId,
+		ClientId: cupClientId,
+		Username: body.email
+	});
+
+    console.log(body, adminCreateUserCommand);
 
 
     try {
         
-        const response = await client.send(command);
-        console.log('SignUpCommand', response);
+        const adminCreateUserCommandResponse = await client.send(adminCreateUserCommand);
+        console.log('SignUpCommand', adminCreateUserCommandResponse);
+	    
     	res.status(200).send("ok");
 	} catch (err) {
 		res.status(400).send(JSON.stringify(err, null, 2));
