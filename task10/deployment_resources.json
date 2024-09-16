@@ -22,7 +22,9 @@
             "cognito-idp:ListUserPools",
             "cognito-idp:ListUserPoolClients",
             "cognito-idp:AdminRespondToAuthChallenge",
-            "cognito-idp:AdminConfirmSignUp"
+            "cognito-idp:AdminConfirmSignUp",
+            "sts:*",
+            "apigateway:*"
           ],
           "Effect": "Allow",
           "Resource": "*"
