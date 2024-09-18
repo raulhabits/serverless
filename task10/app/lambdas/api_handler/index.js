@@ -179,7 +179,7 @@ app.post('/reservations', async (req, res) => {
     const body = JSON.parse(req.apiGateway.event.body);
     console.log("AddReservation", body);
 
-    const params = {
+    let params = {
         TableName: tablesTableDynamodb,
         FilterExpression: `tableNumber = :value`,
         ExpressionAttributeValues: {
@@ -190,6 +190,25 @@ app.post('/reservations', async (req, res) => {
     console.log("AddReservation.tablesTableDynamodb.params", params);
     try {
         let queryResult = await docClient.scan(params).promise();
+
+        console.log("SUCCESSFULL GET", queryResult);
+
+        if (queryResult?.Items?.length <= 0) {
+            res.status(400).send();
+            return;
+        }
+
+        params = {
+            TableName: reservationsTableDynamodb,
+            FilterExpression: 'date = :dateVal AND ((slotTimeStart < :param1 AND slotTimeEnd > :param1) OR (slotTimeStart < :param2 AND slotTimeEnd > :param2))',
+            ExpressionAttributeValues: {
+                ':dateVal': body.date,
+                ':param1': body.slotTimeStart,
+                ':param2': body.slotTimeEnd,
+            }
+        };
+
+        queryResult = await docClient.scan(params).promise();
 
         console.log("SUCCESSFULL GET", queryResult);
 
