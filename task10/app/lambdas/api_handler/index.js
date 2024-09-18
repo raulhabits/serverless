@@ -188,9 +188,11 @@ app.post('/reservations', async (req, res) => {
         console.log("SUCCESSFULL GET", item);
         if (item === undefined) {
             res.status(400).send();
+            return;
         }
      } catch(err) {
         res.status(400).send();
+        return;
      }
 
     const id = !!body?.id ? body.id : uuidv4();
