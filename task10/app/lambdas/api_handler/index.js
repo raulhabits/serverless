@@ -143,6 +143,8 @@ app.post('/signup', async (req, res) => {
 app.post('/tables', async (req, res) => {
 	
     const body = JSON.parse(req.apiGateway.event.body);
+	
+	console.log("tablesTableDynamodb", tablesTableDynamodb, body);
     
 	const targetData = {
 		TableName: tablesTableDynamodb,
