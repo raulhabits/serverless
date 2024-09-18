@@ -12,10 +12,20 @@
     {
       "resource_name": "${booking_userpool}",
       "resource_type": "cognito_idp"
+    },
+    {
+      "resource_name": "${tables_table}",
+      "resource_type": "dynamodb_table"
+    },
+    {
+      "resource_name": "${reservations_table}",
+      "resource_type": "dynamodb_table"
     }
   ],
   "event_sources": [],
   "env_variables": {
+    "tables_table": "${tables_table}",
+    "reservations_table": "${reservations_table}",
     "cup_id": {
       "resource_name": "${booking_userpool}",
       "resource_type": "cognito_idp",
