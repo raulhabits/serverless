@@ -151,7 +151,8 @@ app.post('/signup', async (req, res) => {
 app.post('/tables', async (req, res) => {
 
     const body = JSON.parse(req.apiGateway.event.body);
-    const data = { ...body, id: body.id.toString() }
+    let data = { ...body, id: body.id.toString(), tableNumber: body.number };
+    
 
     console.log("tablesTableDynamodb", tablesTableDynamodb, data);
 
@@ -180,7 +181,7 @@ app.post('/reservations', async (req, res) => {
 
     const params = {
         TableName: tablesTableDynamodb,
-        FilterExpression: `number = :value`,
+        FilterExpression: `tableNumber = :value`,
         ExpressionAttributeValues: {
             ':value': body.tableNumber,
         },
@@ -221,7 +222,10 @@ app.get('/tables', (req, res) => {
         .then(items => {
             res.status(200).send(
                 {
-                    tables: items.map(item => { return { ...item, id: parseInt(item.id) }; })
+                    tables: items.map(item => { 
+                        delete item.tableNumber;
+                        return { ...item, id: parseInt(item.id) };
+                    })
                 }
             );
         })
@@ -239,6 +243,7 @@ app.get('/tables/:tableId', async (req, res) => {
     try {
         let queryResult = await docClient.get(params).promise();
         let item = queryResult.Item;
+        delete item.tableNumber;
         console.log("SUCCESSFULL GET", item);
         res.status(200).send({ ...item, id: parseInt(item.id) });
     } catch (err) {
