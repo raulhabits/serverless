@@ -197,7 +197,7 @@ app.post('/reservations', async (req, res) => {
             res.status(400).send();
             return;
         }
-/*
+
         params = {
             TableName: reservationsTableDynamodb,
             FilterExpression: 'date = :dateVal AND ((slotTimeStart < :param1 AND slotTimeEnd > :param1) OR (slotTimeStart < :param2 AND slotTimeEnd > :param2))',
@@ -212,11 +212,11 @@ app.post('/reservations', async (req, res) => {
 
         console.log("SUCCESSFULL GET", queryResult);
 
-        if (queryResult?.Items?.length <= 0) {
+        if (queryResult?.Items?.length  >= 1) {
             res.status(400).send();
             return;
         }
-        */
+        
         const id = !!body?.id ? body.id : uuidv4();
         const targetData = {
             TableName: reservationsTableDynamodb,
