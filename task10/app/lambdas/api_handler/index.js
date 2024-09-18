@@ -176,7 +176,23 @@ app.post('/tables', async (req, res) => {
 app.post('/reservations', async (req, res) => {
 	
     const body = JSON.parse(req.apiGateway.event.body);
-    const id = uuidv4();
+
+    var params = {
+        TableName: tablesTableDynamodb,
+        Key: { id: body.tableNumber.toString() },
+      };
+    try {
+        let queryResult = await docClient.get(params).promise();
+        let item = queryResult?.Item;
+        console.log("SUCCESSFULL GET", item);
+        if (!item) {
+            res.status(400).send();
+        }
+     } catch(err) {
+        res.status(400).send();
+     }
+
+    const id = !!body?.id ? body.id : uuidv4();
 
 	const targetData = {
 		TableName: reservationsTableDynamodb,
