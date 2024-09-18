@@ -14,21 +14,26 @@ const cupClientId = process.env.cup_client_id;
 const tablesTableDynamodb = process.env.tables_table;
 const reservationsTableDynamodb = process.env.reservations_table;
 
-const scanTable = async (tableName) => {
-    const params = {
+async function getAllItems(tableName) {
+    let items = [];
+    let params = {
         TableName: tableName,
     };
 
-    const scanResults = [];
-    let items;
-    do{
-        items = await documentClient.scan(params).promise();
-        items.Items.forEach((item) => scanResults.push(item));
-        params.ExclusiveStartKey = items.LastEvaluatedKey;
-    }while(typeof items.LastEvaluatedKey !== "undefined");
-    
-    return scanResults;
-};
+    // Scan the table to get all items
+    do {
+        try {
+            const data = await docClient.scan(params).promise();
+            items = items.concat(data.Items);
+            params.ExclusiveStartKey = data.LastEvaluatedKey; // Check if there are more items to retrieve
+        } catch (err) {
+            console.error("Unable to scan the table. Error:", JSON.stringify(err, null, 2));
+            return;
+        }
+    } while (params.ExclusiveStartKey); // Continue until there are no more items
+
+    return items;
+}
 
 
 app.post('/signin', async (req, res) => {
@@ -185,12 +190,17 @@ app.post('/reservations', async (req, res) => {
 });
 
 app.get('/tables', (req, res) => {
-    const tables = scanTable(tablesTableDynamodb);
-    res.status(200).send(
+    getAllItems(tablesTableDynamodb)
+    .then(items => {
+        res.status(200).send(
         {
-            tables
+            tables: items
         }
     );
+    })
+    .catch(err => {
+        console.error("Error retrieving items:", err);
+    });
 });
 
 app.get('/tables/:tableId', async (req, res) => {
@@ -210,12 +220,17 @@ app.get('/tables/:tableId', async (req, res) => {
 });
 
 app.get('/reservations', (req, res) => {
-    const tables = scanTable(reservationsTableDynamodb);
-    res.status(200).send(
+    getAllItems(reservationsTableDynamodb)
+    .then(items => {
+        res.status(200).send(
         {
-            tables
+            reservations: items
         }
     );
+    })
+    .catch(err => {
+        console.error("Error retrieving items:", err);
+    });
 });
 
 const handler = serverless(app);
