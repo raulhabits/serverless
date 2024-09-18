@@ -182,7 +182,8 @@ app.post('/reservations', async (req, res) => {
         TableName: tablesTableDynamodb,
         KeyConditionExpression: `number = :value`,
         ExpressionAttributeValues: {
-            ':value': body.tableNumber,
+            ':value': { N: body.tableNumber },
+            
         },
     };
 
