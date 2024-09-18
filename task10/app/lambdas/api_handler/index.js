@@ -202,8 +202,9 @@ app.post('/reservations', async (req, res) => {
 
         params = {
             TableName: reservationsTableDynamodb,
-            FilterExpression: 'reservationDate = :dateVal AND ((slotTimeStart <= :param1 AND slotTimeEnd > :param1) OR (slotTimeStart < :param2 AND slotTimeEnd >= :param2))',
+            FilterExpression: 'tableNumber = :tableNumber and reservationDate = :dateVal AND ((slotTimeStart <= :param1 AND slotTimeEnd > :param1) OR (slotTimeStart < :param2 AND slotTimeEnd >= :param2))',
             ExpressionAttributeValues: {
+                ':tableNumber': body.tableNumber,
                 ':dateVal': body.date,
                 ':param1': body.slotTimeStart,
                 ':param2': body.slotTimeEnd,
