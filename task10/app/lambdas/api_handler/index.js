@@ -173,11 +173,10 @@ app.post('/tables', async (req, res) => {
 app.post('/reservations', async (req, res) => {
 	
     const body = JSON.parse(req.apiGateway.event.body);
-	const data = {...body, id: body.id.toString()}
 
 	const targetData = {
 		TableName: reservationsTableDynamodb,
-		Item: data
+		Item: body
 	};
     try {
 		const data = await docClient.put(targetData).promise();
@@ -211,10 +210,10 @@ app.get('/tables/:tableId', async (req, res) => {
         Key: { id: req.params.tableId },
       };
     try {
-        let res = await docClient.get(paramsGet).promise();
+        let res = await docClient.get(params).promise();
         let database_item = res.Item;
         console.log("SUCCESSFULL GET", database_item);
-        res.status(200).send(database_item);
+        res.status(200).send({...database_item, id: parseInt(database_item.id));
      } catch(err) {
         console.log(err);
      }
@@ -225,7 +224,7 @@ app.get('/reservations', (req, res) => {
     .then(items => {
         res.status(200).send(
         {
-            reservations: items.map(item => { return {...item, id: parseInt(item.id)};})
+            reservations: items
         }
     );
     })
