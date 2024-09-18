@@ -176,7 +176,9 @@ app.post('/tables', async (req, res) => {
 
 app.post('/reservations', async (req, res) => {
 
-    const body = JSON.parse(req.apiGateway.event.body);
+    const receivedBody = JSON.parse(req.apiGateway.event.body);
+    
+    let body = { ...body, reservationDate: receivedBody.date };
     console.log("AddReservation", body);
 
     let params = {
@@ -200,7 +202,7 @@ app.post('/reservations', async (req, res) => {
 
         params = {
             TableName: reservationsTableDynamodb,
-            FilterExpression: 'date = :dateVal AND ((slotTimeStart < :param1 AND slotTimeEnd > :param1) OR (slotTimeStart < :param2 AND slotTimeEnd > :param2))',
+            FilterExpression: 'reservationDate = :dateVal AND ((slotTimeStart < :param1 AND slotTimeEnd > :param1) OR (slotTimeStart < :param2 AND slotTimeEnd > :param2))',
             ExpressionAttributeValues: {
                 ':dateVal': body.date,
                 ':param1': body.slotTimeStart,
@@ -277,6 +279,7 @@ app.get('/reservations', (req, res) => {
                 {
                     reservations: items.map(item => {
                         delete item.id;
+                        delete item.reservationDate;
                         return item;
                     })
                 }
