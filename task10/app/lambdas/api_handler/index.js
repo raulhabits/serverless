@@ -180,19 +180,19 @@ app.post('/reservations', async (req, res) => {
 
     const params = {
         TableName: tablesTableDynamodb,
-        KeyConditionExpression: `number = :value`,
+        FilterExpression: `number = :value`,
         ExpressionAttributeValues: {
-            ':value': body.tableNumber
+            ':value': body.tableNumber,
         },
     };
 
     console.log("AddReservation.tablesTableDynamodb.params", params);
     try {
-        let queryResult = await docClient.scan(params).promise();
+        let queryResult = await docClient.query(params).promise();
 
         console.log("SUCCESSFULL GET", queryResult);
 
-        if (queryResult.Items.length == 0) {
+        if (queryResult?.Items?.length <= 0) {
             res.status(400).send();
             return;
         }
