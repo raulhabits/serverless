@@ -176,6 +176,7 @@ app.post('/tables', async (req, res) => {
 app.post('/reservations', async (req, res) => {
 	
     const body = JSON.parse(req.apiGateway.event.body);
+    console.log(body);
 
     var params = {
         TableName: tablesTableDynamodb,
@@ -183,11 +184,8 @@ app.post('/reservations', async (req, res) => {
       };
     try {
         let queryResult = await docClient.get(params).promise();
-        let item = queryResult?.Item;
+        let item = queryResult.Item;
         console.log("SUCCESSFULL GET", item);
-        if (!item) {
-            res.status(400).send();
-        }
      } catch(err) {
         res.status(400).send();
      }
