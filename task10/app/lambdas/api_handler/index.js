@@ -173,10 +173,11 @@ app.post('/tables', async (req, res) => {
 app.post('/reservations', async (req, res) => {
 	
     const body = JSON.parse(req.apiGateway.event.body);
+	const data = {...body, id: body.id.toString()}
 
 	const targetData = {
 		TableName: reservationsTableDynamodb,
-		Item: body
+		Item: data
 	};
     try {
 		const data = await docClient.put(targetData).promise();
@@ -194,7 +195,7 @@ app.get('/tables', (req, res) => {
     .then(items => {
         res.status(200).send(
         {
-            tables: items
+            tables: items.map(item => {...item, id: parseInt(item.id)})
         }
     );
     })
@@ -224,7 +225,7 @@ app.get('/reservations', (req, res) => {
     .then(items => {
         res.status(200).send(
         {
-            reservations: items
+            reservations: items.map(item => {...item, id: parseInt(item.id)})
         }
     );
     })
