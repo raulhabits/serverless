@@ -11,8 +11,8 @@ const { CognitoIdentityProviderClient, AdminInitiateAuthCommand, SignUpCommand, 
 const cupId = process.env.cup_id;
 const cupClientId = process.env.cup_client_id;
 
-const tablesTableDynamodb = process.env.cup_client_id;
-const reservationsTableDynamodb = process.env.cup_client_id;
+const tablesTableDynamodb = process.env.tables_table;
+const reservationsTableDynamodb = process.env.reservations_table;
 
 const scanTable = async (tableName) => {
     const params = {
