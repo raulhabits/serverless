@@ -212,7 +212,7 @@ app.post('/reservations', async (req, res) => {
 
         console.log("SUCCESSFULL GET", queryResult);
 
-        if (queryResult?.Items?.length  >= 1) {
+        if (queryResult?.Items?.length  !== 0) {
             res.status(400).send();
             return;
         }
