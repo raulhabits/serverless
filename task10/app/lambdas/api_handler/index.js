@@ -195,7 +195,7 @@ app.get('/tables', (req, res) => {
     .then(items => {
         res.status(200).send(
         {
-            tables: items.map(item => {...item, id: parseInt(item.id)})
+            tables: items.map(item => { return {...item, id: parseInt(item.id)};})
         }
     );
     })
@@ -225,7 +225,7 @@ app.get('/reservations', (req, res) => {
     .then(items => {
         res.status(200).send(
         {
-            reservations: items.map(item => {...item, id: parseInt(item.id)})
+            reservations: items.map(item => { return {...item, id: parseInt(item.id)};})
         }
     );
     })
