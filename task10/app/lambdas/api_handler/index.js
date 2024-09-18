@@ -3,10 +3,13 @@
 const express = require('express');
 const app = express();
 const serverless = require('serverless-http');
-const AWS = require("aws-sdk");
 
+const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
+
 const { CognitoIdentityProviderClient, AdminInitiateAuthCommand, SignUpCommand, AdminConfirmSignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
+const { v4: uuidv4 } = require("uuid");
+
 
 const cupId = process.env.cup_id;
 const cupClientId = process.env.cup_client_id;
@@ -173,16 +176,17 @@ app.post('/tables', async (req, res) => {
 app.post('/reservations', async (req, res) => {
 	
     const body = JSON.parse(req.apiGateway.event.body);
+    const id = uuidv4();
 
 	const targetData = {
 		TableName: reservationsTableDynamodb,
-		Item: body
+		Item: {...body, id}
 	};
     try {
 		const data = await docClient.put(targetData).promise();
         console.log(data);
 	    res.status(200).send({
-                id: body.id
+                reservationId: id
             });
 	} catch (err) {
 		res.status(400).send(JSON.stringify(err, null, 2));
@@ -224,7 +228,10 @@ app.get('/reservations', (req, res) => {
     .then(items => {
         res.status(200).send(
         {
-            reservations: items
+            reservations: items.map(item => {
+                delete item.id;
+                return item;
+            })
         }
     );
     })
