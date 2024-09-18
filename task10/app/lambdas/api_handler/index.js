@@ -178,7 +178,7 @@ app.post('/reservations', async (req, res) => {
 
     const receivedBody = JSON.parse(req.apiGateway.event.body);
     
-    let body = { ...body, reservationDate: receivedBody.date };
+    let body = { ...receivedBody, reservationDate: receivedBody.date };
     console.log("AddReservation", body);
 
     let params = {
