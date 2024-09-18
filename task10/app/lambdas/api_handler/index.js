@@ -143,12 +143,13 @@ app.post('/signup', async (req, res) => {
 app.post('/tables', async (req, res) => {
 	
     const body = JSON.parse(req.apiGateway.event.body);
+    const data = {...body, id: body.id.toString()}
 	
-	console.log("tablesTableDynamodb", tablesTableDynamodb, body);
+	console.log("tablesTableDynamodb", tablesTableDynamodb, data);
     
 	const targetData = {
 		TableName: tablesTableDynamodb,
-		Item: body
+		Item: data
 	};
 
     try {
