@@ -210,10 +210,10 @@ app.get('/tables/:tableId', async (req, res) => {
         Key: { id: req.params.tableId },
       };
     try {
-        let res = await docClient.get(params).promise();
-        let database_item = res.Item;
-        console.log("SUCCESSFULL GET", database_item);
-        res.status(200).send({...database_item, id: parseInt(database_item.id)});
+        let queryResult = await docClient.get(params).promise();
+        let item = queryResult.Item;
+        console.log("SUCCESSFULL GET", item);
+        res.status(200).send({...item, id: parseInt(item.id)});
      } catch(err) {
         console.log(err);
      }
