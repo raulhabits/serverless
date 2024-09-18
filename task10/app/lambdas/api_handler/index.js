@@ -180,7 +180,7 @@ app.post('/reservations', async (req, res) => {
 
     var params = {
         TableName: tablesTableDynamodb,
-        Key: { id: body.tableNumber.toString() },
+        Key: { number: body.tableNumber.toString() },
       };
     try {
         let queryResult = await docClient.get(params).promise();
