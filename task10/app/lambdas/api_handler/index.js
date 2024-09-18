@@ -40,12 +40,12 @@ async function getAllItems(tableName) {
 
 
 app.post('/signin', async (req, res) => {
-	
+
     const body = JSON.parse(req.apiGateway.event.body);
-	
+
     const params = {
         AuthFlow: 'ADMIN_USER_PASSWORD_AUTH',
-	UserPoolId: cupId,
+        UserPoolId: cupId,
         ClientId: cupClientId,
         AuthParameters: {
             USERNAME: body.email,
@@ -57,21 +57,21 @@ app.post('/signin', async (req, res) => {
 
 
     try {
-        
+
         const response = await client.send(new AdminInitiateAuthCommand(params));
         console.log('AdminInitiateAuthCommand', response);
-	    if (response && response.AuthenticationResult && response.AuthenticationResult.AccessToken) {
-	            res.status(200).send({
-	                accessToken: response.AuthenticationResult.IdToken
-	            });
-		    return;
-	        }
-	} catch (err) {
-		res.status(400).send(JSON.stringify(err, null, 2));
-	}
+        if (response && response.AuthenticationResult && response.AuthenticationResult.AccessToken) {
+            res.status(200).send({
+                accessToken: response.AuthenticationResult.IdToken
+            });
+            return;
+        }
+    } catch (err) {
+        res.status(400).send(JSON.stringify(err, null, 2));
+    }
 
     res.status(400).send();
-  
+
 });
 
 app.post('/signup', async (req, res) => {
@@ -82,191 +82,194 @@ app.post('/signup', async (req, res) => {
     const body = JSON.parse(req.apiGateway.event.body);
 
     const signUpCommand = new SignUpCommand({
-      UserPoolId: cupId,
-      ClientId: cupClientId,
-      Username: body.email,
-      Password: body.password,
-      MessageAction: 'SUPPRESS',
-      UserAttributes: [{ Name: "name", Value: body.firstName }, { Name: "email", Value: body.email }],
+        UserPoolId: cupId,
+        ClientId: cupClientId,
+        Username: body.email,
+        Password: body.password,
+        MessageAction: 'SUPPRESS',
+        UserAttributes: [{ Name: "name", Value: body.firstName }, { Name: "email", Value: body.email }],
     });
 
     const adminConfirmSignUpCommand = new AdminConfirmSignUpCommand({ // AdminConfirmSignUpRequest	
-		UserPoolId: cupId,
-		ClientId: cupClientId,
-		Username: body.email
-	});
+        UserPoolId: cupId,
+        ClientId: cupClientId,
+        Username: body.email
+    });
 
     try {
-        
+
         const signUpCommandResponse = await client.send(signUpCommand);
         console.log('SignUpCommand', signUpCommandResponse);
-	    
+
         const adminConfirmSignUpCommandResponse = await client.send(adminConfirmSignUpCommand);
         console.log('adminConfirmSignUpCommand', adminConfirmSignUpCommandResponse);
-	    
-    	res.status(200).send("ok");
-    	return;
-	} catch (err) {
-		res.status(400).send(JSON.stringify(err, null, 2));
-	}
-    
-    res.status(400).send();
 
-/*
-    const signupRequest = {
-        "UserPoolId": cupClientId,
-        "Username": req.body.email,
-        "DesiredDeliveryMediums": [
-            "SMS"
-        ],
-        "MessageAction": "SUPPRESS",
-        "TemporaryPassword": req.body.password,
-        "UserAttributes": [
-            {
-                "Name": "firstName",
-                "Value": req.body.firstName
-            },
-            {
-                "Name": "lastName",
-                "Value": req.body.lastName
-            },
-            {
-                "Name": "email",
-                "Value": req.body.email
-            }
-        ]
+        res.status(200).send("ok");
+        return;
+    } catch (err) {
+        res.status(400).send(JSON.stringify(err, null, 2));
     }
 
-    AWS.CognitoIdentityServiceProvider.AdminCreateUser(signupRequest, (err, data)  => {
-        if (err) {
-            res.status(400).send(err);
+    res.status(400).send();
+
+    /*
+        const signupRequest = {
+            "UserPoolId": cupClientId,
+            "Username": req.body.email,
+            "DesiredDeliveryMediums": [
+                "SMS"
+            ],
+            "MessageAction": "SUPPRESS",
+            "TemporaryPassword": req.body.password,
+            "UserAttributes": [
+                {
+                    "Name": "firstName",
+                    "Value": req.body.firstName
+                },
+                {
+                    "Name": "lastName",
+                    "Value": req.body.lastName
+                },
+                {
+                    "Name": "email",
+                    "Value": req.body.email
+                }
+            ]
         }
-        else {
-            res.send(200).send("Created");   
-        }
-    });
-    */
+    
+        AWS.CognitoIdentityServiceProvider.AdminCreateUser(signupRequest, (err, data)  => {
+            if (err) {
+                res.status(400).send(err);
+            }
+            else {
+                res.send(200).send("Created");   
+            }
+        });
+        */
 });
 
 app.post('/tables', async (req, res) => {
-	
+
     const body = JSON.parse(req.apiGateway.event.body);
-    const data = {...body, id: body.id.toString()}
-	
-	console.log("tablesTableDynamodb", tablesTableDynamodb, data);
-    
-	const targetData = {
-		TableName: tablesTableDynamodb,
-		Item: data
-	};
+    const data = { ...body, id: body.id.toString() }
+
+    console.log("tablesTableDynamodb", tablesTableDynamodb, data);
+
+    const targetData = {
+        TableName: tablesTableDynamodb,
+        Item: data
+    };
 
     try {
-		const data = await docClient.put(targetData).promise();
+        const data = await docClient.put(targetData).promise();
         console.log(data);
-	    res.status(200).send({
-                id: body.id
-            });
-	} catch (err) {
-		res.status(400).send(JSON.stringify(err, null, 2));
-	}
+        res.status(200).send({
+            id: body.id
+        });
+    } catch (err) {
+        res.status(400).send(JSON.stringify(err, null, 2));
+    }
 
 
 });
 
 app.post('/reservations', async (req, res) => {
-	
+
     const body = JSON.parse(req.apiGateway.event.body);
     console.log("AddReservation", body);
 
-    var params = {
+    const params = {
         TableName: tablesTableDynamodb,
-        Key: { number: body.tableNumber },
-      };
+        KeyConditionExpression: `number = :value`,
+        ExpressionAttributeValues: {
+            ':value': body.tableNumber,
+        },
+    };
+
+    console.log("AddReservation.tablesTableDynamodb.params", params);
     try {
-        let queryResult = await docClient.get(params).promise();
-        let item = queryResult.Item;
-        console.log("SUCCESSFULL GET", item);
-        if (item === undefined) {
+        let queryResult = await docClient.query(params).promise();
+
+        console.log("SUCCESSFULL GET", queryResult);
+
+        if (queryResult.Items.length == 0) {
             res.status(400).send();
             return;
         }
-     } catch(err) {
+        
+        const id = !!body?.id ? body.id : uuidv4();
+        const targetData = {
+            TableName: reservationsTableDynamodb,
+            Item: { ...body, id }
+        };
+        const data = await docClient.put(targetData).promise();
+        console.log(data);
+        res.status(200).send({
+            reservationId: id
+        });
+
+    } catch (err) {
         res.status(400).send();
         return;
-     }
+    }
 
-    const id = !!body?.id ? body.id : uuidv4();
-
-	const targetData = {
-		TableName: reservationsTableDynamodb,
-		Item: {...body, id}
-	};
-    try {
-		const data = await docClient.put(targetData).promise();
-        console.log(data);
-	    res.status(200).send({
-                reservationId: id
-            });
-	} catch (err) {
-		res.status(400).send(JSON.stringify(err, null, 2));
-	}
 });
 
 app.get('/tables', (req, res) => {
     getAllItems(tablesTableDynamodb)
-    .then(items => {
-        res.status(200).send(
-        {
-            tables: items.map(item => { return {...item, id: parseInt(item.id)};})
-        }
-    );
-    })
-    .catch(err => {
-        console.error("Error retrieving items:", err);
-    });
+        .then(items => {
+            res.status(200).send(
+                {
+                    tables: items.map(item => { return { ...item, id: parseInt(item.id) }; })
+                }
+            );
+        })
+        .catch(err => {
+            console.error("Error retrieving items:", err);
+        });
 });
 
 app.get('/tables/:tableId', async (req, res) => {
-	console.log('/tables/:tableId -> Params', req.params)
+    console.log('/tables/:tableId -> Params', req.params)
     var params = {
         TableName: tablesTableDynamodb,
         Key: { id: req.params.tableId },
-      };
+    };
     try {
         let queryResult = await docClient.get(params).promise();
         let item = queryResult.Item;
         console.log("SUCCESSFULL GET", item);
-        res.status(200).send({...item, id: parseInt(item.id)});
-     } catch(err) {
+        res.status(200).send({ ...item, id: parseInt(item.id) });
+    } catch (err) {
         console.log(err);
-     }
+    }
 });
 
 app.get('/reservations', (req, res) => {
     getAllItems(reservationsTableDynamodb)
-    .then(items => {
-        res.status(200).send(
-        {
-            reservations: items.map(item => {
-                delete item.id;
-                return item;
-            })
-        }
-    );
-    })
-    .catch(err => {
-        console.error("Error retrieving items:", err);
-    });
+        .then(items => {
+            res.status(200).send(
+                {
+                    reservations: items.map(item => {
+                        delete item.id;
+                        return item;
+                    })
+                }
+            );
+        })
+        .catch(err => {
+            console.error("Error retrieving items:", err);
+        });
 });
 
 const handler = serverless(app);
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const startServer = async () => {
     app.listen(3000, () => {
-      console.log("listening on port 3000!");
+        console.log("listening on port 3000!");
     });
 }
 
