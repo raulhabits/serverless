@@ -1,0 +1,7 @@
+{
+    "name": "task11_api_ui",
+    "resource_type": "swagger_ui",
+    "path_to_spec": "export/f8xeyngltb_oas_v3.json",
+    "target_bucket": "api-ui-hoster",
+    "deployment_package": "swagger_ui_task11_api_ui.zip"
+}
